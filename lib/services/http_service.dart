@@ -20,6 +20,10 @@ class HttpService {
     return "/mock/pattern/$userId";
   }
 
+  static String apiPatch(String userId) {
+    return "/mock/pattern/$userId";
+  }
+
   // Methods
 
   // get method
@@ -47,7 +51,7 @@ class HttpService {
   }
 
   // put method
-  static Future<String?> PUT(String api, Map<String, String> params) async {
+  static Future<String?> PUT(String api, Map<String, dynamic> params) async {
     var uri = Uri.https(BASE_URL, api);
     Response response = await put(
         uri, headers: headers, body: jsonEncode(params));

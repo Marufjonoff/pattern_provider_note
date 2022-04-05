@@ -6,6 +6,7 @@ class HomeViewModel extends ChangeNotifier {
 
   List<PatternApi> list = [];
   bool isLoading = true;
+  late String updateId;
 
   // text editing controller
   TextEditingController nameController = TextEditingController();
@@ -52,10 +53,37 @@ class HomeViewModel extends ChangeNotifier {
       PatternApi patternApi = PatternApi(name: name, title: title, body: body, dateTime: DateTime.now().toString().substring(0, 16), id: "");
       await HttpService.POST(HttpService.API_POST, HttpService.paramsCreate(patternApi));
 
+      nameController.clear();
+      titleController.clear();
+      bodyController.clear();
       apiGet();
       notifyListeners();
     }
   }
+
+  // update post
+  void updatePost(BuildContext context) async {
+    bool result = await displayDialog(context);
+
+    String name = nameController.text.trim().toString();
+    String title = titleController.text.trim().toString();
+    String body = bodyController.text.trim().toString();
+
+    if(result) {
+      isLoading = true;
+      notifyListeners();
+
+      PatternApi patternApi = PatternApi(name: name, title: title, body: body, dateTime: DateTime.now().toString().substring(0, 16), id: "");
+      await HttpService.PUT(HttpService.apiPatch(updateId), HttpService.paramsCreate(patternApi));
+
+      nameController.clear();
+      titleController.clear();
+      bodyController.clear();
+      apiGet();
+      notifyListeners();
+    }
+  }
+
 
   Future <bool> displayDialog(BuildContext context) async {
     return await showDialog(
